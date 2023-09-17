@@ -6,16 +6,23 @@ export class ValidationExceptionFilter implements ExceptionFilter {
     catch(exception: BadRequestException, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
-        const validationErrors = exception.getResponse()['message']; // This contains the validation errors
+        const validationErrors = exception.getResponse()['message'];
 
-        // Transform the validation errors to the desired format
-        const formattedErrors = validationErrors.map(error => {
+        const errorMapping = {};
+
+        validationErrors.forEach(error => {
             const splitError = error.split(' ');
-            const property = splitError.shift(); // Get the property name
-            return {
-                [property]: splitError.join(' ')
-            };
+            const property = splitError.shift();
+
+            if (!errorMapping[property]) {
+                errorMapping[property] = [];
+            }
+            errorMapping[property].push(splitError.join(' '));
         });
+
+        const formattedErrors = Object.keys(errorMapping).map(key => ({
+            [key]: errorMapping[key]
+        }));
 
         response.status(exception.getStatus()).json({
             statusCode: exception.getStatus(),
