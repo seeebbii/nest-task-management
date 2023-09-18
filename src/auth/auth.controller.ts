@@ -5,12 +5,17 @@ import { ValidationExceptionFilter } from 'src/filters/validation_exception.filt
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService){}
+    constructor(private authService: AuthService) { }
 
     @Post('/signup')
     // @UseFilters(new ValidationExceptionFilter())
-    singUp(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto): Promise<void>{
+    singUp(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto): Promise<void> {
         return this.authService.signUp(authCredentialsDto);
+    }
+
+    @Post('/signin')
+    signIn(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto) {
+        return this.authService.sigIn(authCredentialsDto);
     }
 
 }
