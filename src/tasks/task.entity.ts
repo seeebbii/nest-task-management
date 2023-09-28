@@ -9,7 +9,7 @@ export class TaskEntity extends BaseEntity{
     id: number;
 
     @Column()
-    title: string;
+    title: string; 
 
     @Column()
     description: string;
@@ -19,5 +19,8 @@ export class TaskEntity extends BaseEntity{
 
     //type => User, user => user.tasks, {eager: false}
     @ManyToOne(() => User, user => user.tasks, {eager: false,})
-    user: User[];
+    user: User;
+
+    @Column()
+    userId: number;
 }
